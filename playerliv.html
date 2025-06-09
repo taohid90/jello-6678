@@ -159,8 +159,8 @@
 </head>
 <body>
     <div class="player-section">
-        <!-- Video.js player element -->
-        <video id="tv-player" class="video-js vjs-matrix" controls autoplay playsinline preload="auto">
+        <!-- Video.js player element - 'muted' attribute যোগ করা হয়েছে -->
+        <video id="tv-player" class="video-js vjs-matrix" controls autoplay muted playsinline preload="auto">
         </video>
     </div>
 
@@ -180,61 +180,50 @@
             const currentChannelTitleElement = document.getElementById('currentChannelTitle');
             const playerChannelGridElement = document.getElementById('playerChannelGrid');
             const loadingMessagePlayer = document.getElementById('loading-message-player');
-            const isDesktop = window.innerWidth > 768;
 
-            // Initialize Video.js player
+            // Initialize Video.js player with muted property
             const player = videojs('tv-player', {
-                autoplay: true,
+                autoplay: true, // autoplay থাকবে
+                muted: true,    // ব্রাউজার পলিসির জন্য মিউট অবস্থায় শুরু হবে
                 controls: true,
                 responsive: true,
-                fluid: true, // Makes the player scale with its container
-                liveui: true, // Enables modern live stream UI
+                fluid: true,
+                liveui: true,
                 html5: {
                     hls: {
-                        // Allows playback of HLS streams on platforms that don't natively support it.
                         overrideNative: true
                     }
                 }
             });
 
-            const m3uDataFromStorage = localStorage.getItem('m3uPlaylistData');
-            let initialUrl = localStorage.getItem('selectedChannelUrl');
-            let initialName = localStorage.getItem('selectedChannelName');
-
-            if (!initialUrl || !initialName) {
-                const urlParams = new URLSearchParams(window.location.search);
-                initialUrl = decodeURIComponent(urlParams.get('url') || '');
-                initialName = decodeURIComponent(urlParams.get('name') || '');
-            }
-
+            // চ্যানেল প্লে করার জন্য ফাংশন (আরও নির্ভরযোগ্য)
             function playChannel(url, name) {
-                currentChannelTitleElement.textContent = name;
+                if (!url || !name) {
+                    console.error("অবৈধ চ্যানেল তথ্য:", {url, name});
+                    currentChannelTitleElement.textContent = "চ্যানেল প্লে করা যাচ্ছে না";
+                    return;
+                }
                 
-                // Set the source for Video.js
+                currentChannelTitleElement.textContent = `এখন চলছে: ${name}`;
+                
+                // Video.js এর জন্য সোর্স সেট করা
                 player.src({
                     src: url,
-                    type: 'application/x-mpegURL' // This type is crucial for HLS/m3u8 streams
+                    type: 'application/x-mpegURL'
                 });
                 
-                // Attempt to play the video
+                // নতুন সোর্স লোড করে প্লে করার চেষ্টা
+                player.load();
                 player.play().catch(error => {
-                    console.warn("Autoplay was prevented by the browser:", error);
-                });
-
-                // Error handling for the player
-                player.on('error', () => {
-                    const error = player.error();
-                    console.error("প্লেব্যাক ত্রুটি:", error);
+                    console.warn("প্লেব্যাক শুরু করা যায়নি:", error);
                     currentChannelTitleElement.textContent = `${name} (প্লে করা যাচ্ছে না)`;
-                    // You can add more user-friendly error messages here based on error.code
                 });
 
-                // Save last played channel info
+                // শেষ প্লে করা চ্যানেলের তথ্য সংরক্ষণ
                 localStorage.setItem('selectedChannelUrl', url);
                 localStorage.setItem('selectedChannelName', name);
             }
-            
-            // This function remains largely the same
+
             function parseM3U(data) {
                 const lines = data.split('\n');
                 const channels = [];
@@ -256,7 +245,6 @@
                 return channels;
             }
 
-            // This function remains largely the same
             function displayChannelsInPlayer(channels) {
                 playerChannelGridElement.innerHTML = '';
                 if (!channels || channels.length === 0) {
@@ -290,13 +278,12 @@
                     listItem.appendChild(logoContainer);
                     listItem.appendChild(nameSpan);
 
-                    listItem.addEventListener('click', () => {
-                        playChannel(channel.url, channel.name);
-                    });
+                    const switchChannel = () => playChannel(channel.url, channel.name);
 
+                    listItem.addEventListener('click', switchChannel);
                     listItem.addEventListener('keypress', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
-                            playChannel(channel.url, channel.name);
+                            switchChannel();
                         }
                     });
 
@@ -304,24 +291,46 @@
                 });
             }
 
-            // Initial load logic
-            if (m3uDataFromStorage) {
-                const channels = parseM3U(m3uDataFromStorage);
-                displayChannelsInPlayer(channels);
-                if (initialUrl && initialName) {
-                    playChannel(initialUrl, initialName);
-                } else {
-                    currentChannelTitleElement.textContent = "কোনো চ্যানেল নির্বাচন করা হয়নি";
+            // প্লেয়ার পুরোপুরি রেডি হলে বাকি কাজগুলো করা হবে
+            player.on('ready', function() {
+                console.log("প্লেয়ার এখন প্রস্তুত!");
+
+                // প্লেয়ারের ত্রুটি হ্যান্ডলিং
+                this.on('error', () => {
+                    const error = this.error();
+                    console.error("প্লেব্যাক ত্রুটি:", error);
+                    const currentName = localStorage.getItem('selectedChannelName') || 'এই চ্যানেলটি';
+                    currentChannelTitleElement.textContent = `${currentName} প্লে করা যাচ্ছে না (ত্রুটি কোড: ${error.code})`;
+                });
+                
+                const m3uDataFromStorage = localStorage.getItem('m3uPlaylistData');
+                let initialUrl = localStorage.getItem('selectedChannelUrl');
+                let initialName = localStorage.getItem('selectedChannelName');
+
+                if (!initialUrl || !initialName) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    initialUrl = decodeURIComponent(urlParams.get('url') || '');
+                    initialName = decodeURIComponent(urlParams.get('name') || '');
                 }
-            } else if (initialUrl && initialName) {
-                // Case where user lands directly on player page without visiting main page first
-                playChannel(initialUrl, initialName);
-                loadingMessagePlayer.textContent = "সম্পূর্ণ চ্যানেল তালিকা পাওয়া যায়নি। অনুগ্রহ করে প্রধান পেজ থেকে আসুন।";
-                console.warn("M3U data not found in localStorage.");
-            } else {
-                currentChannelTitleElement.textContent = "ত্রুটি: চ্যানেল তথ্য পাওয়া যায়নি";
-                loadingMessagePlayer.textContent = "চ্যানেল তালিকা লোড করা যায়নি।";
-            }
+
+                // প্রাথমিক লোড লজিক
+                if (m3uDataFromStorage) {
+                    const channels = parseM3U(m3uDataFromStorage);
+                    displayChannelsInPlayer(channels);
+                    if (initialUrl && initialName) {
+                        playChannel(initialUrl, initialName);
+                    } else {
+                        currentChannelTitleElement.textContent = "একটি চ্যানেল নির্বাচন করুন";
+                    }
+                } else if (initialUrl && initialName) {
+                    playChannel(initialUrl, initialName);
+                    loadingMessagePlayer.textContent = "সম্পূর্ণ চ্যানেল তালিকা পাওয়া যায়নি। অনুগ্রহ করে প্রধান পেজ থেকে আসুন।";
+                    console.warn("M3U data not found in localStorage.");
+                } else {
+                    currentChannelTitleElement.textContent = "ত্রুটি: চ্যানেল তথ্য পাওয়া যায়নি";
+                    loadingMessagePlayer.textContent = "চ্যানেল তালিকা লোড করা যায়নি।";
+                }
+            });
         });
     </script>
 </body>
