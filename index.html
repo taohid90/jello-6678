@@ -1,434 +1,108 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ক্যাটাগরিস</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-bg: #0A0F1A; /* আরও গাঢ় এবং সমৃদ্ধ নীল */
-            --secondary-bg: #101828; /* হেডার এবং কার্ডের জন্য গাঢ় নেভি ব্লু */
-            --card-bg: linear-gradient(145deg, #141c2e, #0e1321); /* কার্ডের জন্য হালকা গ্রেডিয়েন্ট */
-            --card-border: #2a364e; /* কার্ডের বর্ডার */
-            --text-primary: #E0E6F1; /* প্রধান টেক্সট কালার (হালকা ল্যাভেন্ডার সাদা) */
-            --text-secondary: #A0AEC0; /* দ্বিতীয় টেক্সট কালার (হালকা ধূসর) */
-            --accent-color: #38BDF8; /* উজ্জ্বল সায়ান অ্যাকসেন্ট */
-            --accent-hover: #0EA5E9; /* অ্যাকসেন্ট হোভার */
-            --icon-color: var(--accent-color);
-            --shadow-color-light: rgba(56, 189, 248, 0.1); /* হালকা গ্লো */
-            --shadow-color-dark: rgba(0, 0, 0, 0.4); /* গাঢ় শ্যাডো */
-            --font-primary: 'Poppins', sans-serif; /* ইংরেজি এবং সাধারণ UI */
-            --font-bengali: 'Hind Siliguri', sans-serif; /* বাংলা টেক্সট */
-        }
-
-        body {
-            font-family: var(--font-primary);
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .app-header {
-            background-color: var(--secondary-bg);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 15px var(--shadow-color-dark);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .header-icon {
-            background: transparent;
-            border: none;
-            color: var(--icon-color);
-            cursor: pointer;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .header-icon:hover {
-            background-color: var(--shadow-color-light);
-            color: var(--accent-hover);
-        }
-        .header-icon svg {
-            width: 26px; /* আইকন সাইজ সামান্য বৃদ্ধি */
-            height: 26px;
-            stroke-width: 1.8; /* আইকন স্ট্রোক সামঞ্জস্য */
-        }
-
-        .header-page-title {
-            font-family: var(--font-primary);
-            font-size: 1.6em; /* টাইটেল ফন্ট সাইজ বৃদ্ধি */
-            color: var(--text-primary);
-            font-weight: 600;
-            text-align: center;
-            flex-grow: 1;
-            margin: 0 15px;
-        }
-        
-        .content-area {
-            padding: 25px;
-        }
-
-        .channel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* কার্ড সাইজ বৃদ্ধি */
-            gap: 25px; /* গ্যাপ বৃদ্ধি */
-            list-style: none;
-            padding: 0;
-        }
-        .channel-item {
-            background: var(--card-bg);
-            border-radius: 18px; /* আরও গোলাকার */
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                        box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-                        border-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between; /* কন্টেন্ট উপরে ও নিচে সমানভাবে ছড়াবে */
-            min-height: 190px; /* আইটেমের উচ্চতা বৃদ্ধি */
-            box-shadow: 0 8px 20px var(--shadow-color-dark);
-            border: 1.5px solid var(--card-border);
-            overflow: hidden; /* হোভার ইফেক্টের জন্য */
-        }
-        .channel-item:hover {
-            transform: translateY(-8px) scale(1.05); /* উন্নত হোভার ইফেক্ট */
-            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.2);
-            border-color: var(--accent-color);
-        }
-        .channel-logo-container {
-            width: 85px;   /* লোগো কন্টেইনারের সাইজ বৃদ্ধি */
-            height: 85px;
-            background-color: #f0f4f8; /* হালকা অফ-হোয়াইট লোগো ব্যাকগ্রাউন্ড */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 18px;
-            overflow: hidden;
-            padding: 8px; /* লোগো এবং কন্টেইনারের মধ্যে স্পেস */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
-            border: 2px solid transparent; /* ইনিশিয়ালি ট্রান্সপারেন্ট বর্ডার */
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .channel-item:hover .channel-logo-container {
-            border-color: var(--accent-color);
-            box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.2), 0 0 12px rgba(56, 189, 248, 0.3);
-        }
-        .channel-logo-container img {
-            max-width: 100%; /* কন্টেইনারের প্যাডিংয়ের কারণে এটি পুরো জায়গা নিতে পারবে */
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 4px; /* হালকা গোলাকার যদি ইমেজ বর্গাকার হয় */
-        }
-        .channel-name {
-            font-family: var(--font-bengali);
-            font-size: 1.05em; /* বাংলা ফন্ট সাইজ বৃদ্ধি */
-            font-weight: 500;
-            color: var(--text-secondary);
-            word-break: break-word;
-            line-height: 1.45;
-            margin-top: auto;
-            transition: color 0.3s ease;
-        }
-        .channel-item:hover .channel-name {
-            color: var(--text-primary);
-        }
-
-        #loading-message {
-            text-align: center;
-            font-family: var(--font-bengali);
-            font-size: 1.3em;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-            width: 100%;
-            font-weight: 500;
-        }
-        .loading-spinner { /* সিম্পল CSS লোডার */
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--shadow-color-light);
-            border-top-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px auto;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .channel-grid {
-                grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-                gap: 20px;
-            }
-            .channel-item {
-                min-height: 175px;
-                padding: 15px;
-            }
-            .channel-logo-container {
-                width: 75px;
-                height: 75px;
-            }
-            .header-page-title {
-                font-size: 1.4em;
-            }
-            .content-area {
-                padding: 20px;
-            }
-        }
-         @media (max-width: 480px) {
-            .channel-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            .content-area {
-                 padding: 15px;
-            }
-            .app-header {
-                padding: 12px 15px;
-            }
-            .header-icon svg {
-                width: 22px;
-                height: 22px;
-            }
-            .header-page-title {
-                font-size: 1.2em;
-            }
-            .channel-item {
-                min-height: 160px;
-                padding: 12px;
-            }
-            .channel-logo-container {
-                width: 65px;
-                height: 65px;
-                margin-bottom: 12px;
-            }
-            .channel-name {
-                font-size: 0.95em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Channels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    .channel-card {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      padding: 0.5rem;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .channel-card:hover {
+      transform: scale(1.1);
+      border-color: rgba(255,255,255,0.6);
+    }
+    .channel-card img {
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    .channel-card:hover img {
+      transform: scale(1.05);
+    }
+    @media (max-width: 480px) {
+      .channel-grid {
+        gap: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <button id="backButton" class="header-icon" aria-label="ফিরে যান">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-        </button>
-        <h1 class="header-page-title">Sony Liv</h1>
-        <button id="refreshButton" class="header-icon" aria-label="রিফ্রেশ করুন">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-        </button>
-    </header>
+  <div id="channel-grid" class="channel-grid"></div>
 
-    <main class="content-area">
-        <div id="loading-message">
-            <div class="loading-spinner"></div>
-            লোড হচ্ছে...
-        </div>
-        <div class="channel-grid" id="channelGrid">
-            <!-- চ্যানেল আইটেমগুলো এখানে যুক্ত হবে -->
-        </div>
-    </main>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const channelGridElement = document.getElementById('channelGrid');
-            const loadingMessageElement = document.getElementById('loading-message');
-            const backButton = document.getElementById('backButton');
-            const refreshButton = document.getElementById('refreshButton');
-
-            // আপনার দেওয়া M3U ডেটা
-            const m3uData = `
-#EXTM3U
-playlistCreator = "Nayeem Parvez";
-
-#EXTINF:-1 tvg-id="sony-hd" tvg-name="SET HD" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/xCV0N1yy/SONY-SET-HD.png" group-title="Entertainment",SET HD
-https://tataplay.slivcdn.com/hls/live/2011671/SETHD/master.m3u8
-#EXTINF:-1 tvg-id="sony-sab-hd" tvg-name="Sony SAB HD" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/HLrGvfHN/SONY-SAB-HD.png" group-title="Entertainment",Sony SAB HD
-https://tataplay.slivcdn.com/hls/live/2011749/SABHD/master.m3u8
-#EXTINF:-1 tvg-id="sony-marathi" tvg-name="Sony Marathi" tvg-language="Marathi" tvg-logo="https://i.postimg.cc/ZqvcSG5j/SONY-MARATHI.png" group-title="Entertainment",Sony Marathii
-https://tataplay.slivcdn.com/hls/live/2011740/SonyMarathi/master.m3u8
-#EXTINF:-1 tvg-id="sony-pal" tvg-name="Sony Pal" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/nrQ6V7MG/SONY-PAL.png" group-title="Entertainment",Sony Pal
-https://tataplay.slivcdn.com/hls/live/2011741/SonyPalSD/master.m3u8
-#EXTINF:-1 tvg-id="sony-aath" tvg-name="Sony Aath" tvg-language="Bengali" tvg-logo="https://i.postimg.cc/bY12WVTm/SONY-AATH.png" group-title="Entertainment",Sony Aath
-https://tataplay.slivcdn.com/hls/live/2011641/SonyAathSD/master.m3u8
-#EXTINF:-1 tvg-id="sony-yay" tvg-name="Sony Yay" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/qRxtS9Gy/SONY-YAY.png" group-title="Kids",Sony Yay
-https://tataplay.slivcdn.com/hls/live/2011746/SonyYaySD/master.m3u8
-#EXTINF:-1 tvg-id="sony-max-hd" tvg-name="Sony MAX HD" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/XYF71G8F/SONY-MAX-HD.png" group-title="Movies",Sony MAX HD
-https://tataplay.slivcdn.com/hls/live/2011670/SonyMaxhd/master.m3u8
-#EXTINF:-1 tvg-id="sony-max" tvg-name="Sony MAX" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/X7MmrgCs/SONY-MAX.png" group-title="Movies",Sony MAX
-https://tataplay.slivcdn.com/hls/live/2011745/SonyMaxSD/master.m3u8
-#EXTINF:-1 tvg-id="sony-max-2" tvg-name="Sony MAX 2" tvg-language="Hindi" tvg-logo="https://www.sonypicturesnetworks.com/images/logos/Sony_MAX2.png" group-title="Movies" group-logo="https://i.postimg.cc/ZnBh92s3/SONY-MAX-2.png", Sony MAX 2
-https://tataplay.slivcdn.com/hls/live/2011908/MAX2/master.m3u8
-#EXTINF:-1 tvg-id="sony-wah" tvg-name="Sony WAH" tvg-language="Hindi" tvg-logo="https://sonypicturesnetworks.com/images/logos/Sony_WAH.png" group-title="Movies" group-logo="https://i.postimg.cc/jq6Qh61g/SONY-WAH.png", Sony WAH
-https://tataplay.slivcdn.com/hls/live/2011906/SonyWah/master.m3u8
-#EXTINF:-1 tvg-id="sony-pix-hd" tvg-name="Sony PIX HD" tvg-language="English" tvg-logo="https://i.postimg.cc/hGYnSKpg/SONY-PIX-HD.png" group-title="Movies",Sony PIX HD
-https://tataplay.slivcdn.com/hls/live/2011748/PIXHD/master.m3u8
-#EXTINF:-1 tvg-id="sony-bbc-earth-hd" tvg-name="Sony BBC Earth HD" tvg-language="English" tvg-logo="https://i.postimg.cc/t4g4cy4Z/SONY-BBC-EARTH.png" group-title="Infotainment",Sony BBC Earth HD
-https://tataplay.slivcdn.com/hls/live/2011907/SonyBBCEarthHD/master.m3u8
-#EXTINF:-1 tvg-id="sony-ten-1-hd" tvg-name="Sony Sports Ten 1 HD" tvg-language="English" tvg-logo="https://i.postimg.cc/d00sTpK0/SONY-SPORTS-TEN-1-HD.png" group-title="Sports",Sony Sports Ten 1 HD
-https://tataplay.slivcdn.com//hls/live/2011747/TEN1HD/master.m3u8
-#EXTINF:-1 tvg-id="sony-ten-2-hd" tvg-name="Sony Sports Ten 2 HD" tvg-language="English" tvg-logo="https://i.postimg.cc/wvfsmLrC/SONY-SPORTS-TEN-2-HD.png" group-title="Sports",Sony Sports Ten 2 HD
-https://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8
-#EXTINF:-1 tvg-id="sony-ten-3-hd" tvg-name="Sony Sports Ten 3 HD" tvg-language="Hindi" tvg-logo="https://i.postimg.cc/2SGvDswj/SONY-SPORTS-TEN-3-HD.png" group-title="Sports",Sony Sports Ten 3 HD
-https://tataplay.slivcdn.com/hls/live/2020591/TEN3HD/master.m3u8
-#EXTINF:-1 tvg-id="sony-ten-4-hd" tvg-name="Sony Sports Ten 4 HD" tvg-language="Hindi" tvg-logo="https://www.sonypicturesnetworks.com/images/logos/SONY_SportsTen4_HD_Logo_CLR.png" group-title="Sports" group-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqTzjp5hQzAllLUx0A_fJ5ThFLGdt-X7rIPKzw25coi6AUVjo_KyvDQrsb&s=10", Sony Sports Ten 4 HD
-https://tataplay.slivcdn.com/hls/live/2020589/ten4hd/master.m3u8
-#EXTINF:-1 tvg-id="sony-ten-5-hd" tvg-name="Sony Sports Ten 5 HD" tvg-language="English" tvg-logo="https://i.postimg.cc/xCzcchKz/SONY-SPORTS-TEN-5-HD.png" group-title="Sports", Sony Sports Ten 5 HD
-https://tataplay.slivcdn.com/hls/live/2020593/SONYSIXHD/master.m3u8
-#EXTINF:-1 tvg-id="sony-kal" tvg-name="Sony KAL" tvg-country="IN" tvg-logo="https://i.postimg.cc/ZqnmcXdx/Sony-KAL.png" tvg-chno="sony-kal" group-title="SonyLIV by CRICFy",Sony KAL
-https://spt-sonykal-1-us.lg.wurl.tv/playlist.m3u8
-            `.trim();
-
-            function parseM3U(data) {
-                const lines = data.split('\n');
-                const channels = [];
-                let currentChannel = {};
-                for (const line of lines) {
-                    const trimmedLine = line.trim();
-                    if (trimmedLine.startsWith('#EXTINF:')) {
-                        currentChannel = {}; // Reset for new channel
-                        
-                        const logoMatch = trimmedLine.match(/tvg-logo="([^"]+)"/);
-                        currentChannel.logo = (logoMatch && logoMatch[1]) ? logoMatch[1] : 'https://via.placeholder.com/80x80.png?text=লোগো';
-                        
-                        const nameMatch = trimmedLine.match(/tvg-name="([^"]+)"/);
-                        if (nameMatch && nameMatch[1]) {
-                            currentChannel.name = nameMatch[1];
-                        } else {
-                            // ফলব্যাক: লাইনের কমার পরের অংশ নাম হিসেবে নেওয়া
-                            const commaIndex = trimmedLine.lastIndexOf(',');
-                            currentChannel.name = (commaIndex !== -1) ? trimmedLine.substring(commaIndex + 1).trim() : 'অজানা চ্যানেল';
-                        }
-                    } else if (trimmedLine && !trimmedLine.startsWith('#') && currentChannel.name) {
-                        // এটি URL লাইন এবং currentChannel এ আগের লাইন থেকে তথ্য আছে
-                        currentChannel.url = trimmedLine;
-                        if (currentChannel.url) { // নিশ্চিত করা যে URL আছে
-                            channels.push(currentChannel);
-                        }
-                        currentChannel = {}; // পরবর্তী চ্যানেলের জন্য রিসেট (যদিও #EXTINF এ রিসেট হচ্ছে)
-                    }
-                }
-                return channels;
-            }
-
-            function displayChannels(channels) {
-                channelGridElement.innerHTML = ''; // আগের চ্যানেলগুলো পরিষ্কার করা
-                if (channels.length === 0) {
-                    // লোডিং স্পিনার সরিয়ে বার্তা দেখানো
-                    loadingMessageElement.innerHTML = 'কোনো চ্যানেল পাওয়া যায়নি।';
-                    loadingMessageElement.style.display = 'block';
-                    return;
-                }
-                loadingMessageElement.style.display = 'none'; // চ্যানেল থাকলে লোডিং বার্তা লুকানো
-
-                channels.forEach(channel => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'channel-item';
-                    listItem.setAttribute('role', 'button'); // অ্যাক্সেসিবিলিটি
-                    listItem.setAttribute('tabindex', '0'); // কি-বোর্ড নেভিগেশন
-
-                    const logoContainer = document.createElement('div');
-                    logoContainer.className = 'channel-logo-container';
-                    const img = document.createElement('img');
-                    img.src = channel.logo;
-                    img.alt = `${channel.name} লোগো`;
-                    img.onerror = function() { 
-                        this.src = 'https://via.placeholder.com/80x80.png?text=ত্রুটি';
-                        this.style.filter = 'grayscale(1)'; // ত্রুটিপূর্ণ লোগো ভিন্নভাবে দেখানো
-                    };
-                    logoContainer.appendChild(img);
-
-                    const nameSpan = document.createElement('div');
-                    nameSpan.className = 'channel-name';
-                    nameSpan.textContent = channel.name;
-
-                    listItem.appendChild(logoContainer);
-                    listItem.appendChild(nameSpan);
-
-                    const handleChannelClick = () => {
-                        // M3U ডেটা এবং নির্বাচিত চ্যানেলের তথ্য player.html এর জন্য localStorage এ সংরক্ষণ
-                        localStorage.setItem('m3uPlaylistData', m3uData); // পুরো প্লেলিস্ট পাঠানোর দরকার নাও হতে পারে, যদি প্লেয়ার শুধু একটি URL নেয়
-                        localStorage.setItem('selectedChannelUrl', channel.url);
-                        localStorage.setItem('selectedChannelName', channel.name);
-                        
-                        // player.html পেজে নেভিগেট করা
-                        window.location.href = `playerliv.html?url=${encodeURIComponent(channel.url)}&name=${encodeURIComponent(channel.name)}`;
-                    };
-
-                    listItem.addEventListener('click', handleChannelClick);
-                    listItem.addEventListener('keypress', (event) => { // কি-বোর্ডের Enter বা Space দিয়ে অ্যাক্টিভেট করার জন্য
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            handleChannelClick();
-                        }
-                    });
-
-                    channelGridElement.appendChild(listItem);
-                });
-            }
-
-            function loadAndDisplayChannels() {
-                // লোডিং বার্তা এবং স্পিনার দেখানো
-                loadingMessageElement.innerHTML = `
-                    <div class="loading-spinner"></div>
-                    লোড হচ্ছে...
-                `;
-                loadingMessageElement.style.display = 'block';
-                channelGridElement.innerHTML = ''; // গ্রিড পরিষ্কার রাখা
-
-                // ডেটা পার্স এবং প্রদর্শনের জন্য একটি ছোট ডিলে, যেন লোডিং অ্যানিমেশন দেখা যায়
-                setTimeout(() => {
-                    try {
-                        const channels = parseM3U(m3uData);
-                        displayChannels(channels);
-                    } catch (error) {
-                        console.error("M3U পার্সিং বা চ্যানেল প্রদর্শনে ত্রুটি:", error);
-                        loadingMessageElement.innerHTML = 'চ্যানেল লোড করতে সমস্যা হয়েছে।';
-                        loadingMessageElement.style.display = 'block';
-                    }
-                }, 500); // 500ms ডিলে
-            }
-
-            // হেডার বাটনগুলোর জন্য ইভেন্ট লিসেনার
-            if (backButton) {
-                backButton.addEventListener('click', () => {
-                    window.history.back(); // ব্রাউজারের আগের পেজে ফিরে যাওয়া
-                });
-            }
-
-            if (refreshButton) {
-                refreshButton.addEventListener('click', () => {
-                    loadAndDisplayChannels(); // চ্যানেলগুলো রিফ্রেশ করা
-                });
-            }
-
-            // প্রথমবার পেজ লোড হওয়ার সময় চ্যানেল দেখানো
-            loadAndDisplayChannels();
-        });
-    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const m3u = `#EXTM3U
+        #EXTINF:-1 tvg-id="sony-hd" tvg-name="SET HD" tvg-logo="https://i.postimg.cc/xCV0N1yy/SONY-SET-HD.png",SET HD https://tataplay.slivcdn.com/hls/live/2011671/SETHD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-sab-hd" tvg-name="Sony SAB HD" tvg-logo="https://i.postimg.cc/HLrGvfHN/SONY-SAB-HD.png",Sony SAB HD https://tataplay.slivcdn.com/hls/live/2011749/SABHD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-marathi" tvg-name="Sony Marathi" tvg-logo="https://i.postimg.cc/ZqvcSG5j/SONY-MARATHI.png",Sony Marathi https://tataplay.slivcdn.com/hls/live/2011740/SonyMarathi/master.m3u8
+        #EXTINF:-1 tvg-id="sony-pal" tvg-name="Sony Pal" tvg-logo="https://i.postimg.cc/nrQ6V7MG/SONY-PAL.png",Sony Pal https://tataplay.slivcdn.com/hls/live/2011741/SonyPalSD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-aath" tvg-name="Sony Aath" tvg-logo="https://i.postimg.cc/bY12WVTm/SONY-AATH.png",Sony Aath https://tataplay.slivcdn.com/hls/live/2011641/SonyAathSD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-yay" tvg-name="Sony Yay" tvg-logo="https://i.postimg.cc/qRxtS9Gy/SONY-YAY.png",Sony Yay https://tataplay.slivcdn.com/hls/live/2011746/SonyYaySD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-max-hd" tvg-name="Sony MAX HD" tvg-logo="https://i.postimg.cc/XYF71G8F/SONY-MAX-HD.png",Sony MAX HD https://tataplay.slivcdn.com/hls/live/2011670/SonyMaxhd/master.m3u8
+        #EXTINF:-1 tvg-id="sony-max" tvg-name="Sony MAX" tvg-logo="https://i.postimg.cc/X7MmrgCs/SONY-MAX.png",Sony MAX https://tataplay.slivcdn.com/hls/live/2011745/SonyMaxSD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-max-2" tvg-name="Sony MAX 2" tvg-logo="https://www.sonypicturesnetworks.com/images/logos/Sony_MAX2.png",Sony MAX 2 https://tataplay.slivcdn.com/hls/live/2011908/MAX2/master.m3u8
+        #EXTINF:-1 tvg-id="sony-wah" tvg-name="Sony WAH" tvg-logo="https://sonypicturesnetworks.com/images/logos/Sony_WAH.png",Sony WAH https://tataplay.slivcdn.com/hls/live/2011906/SonyWah/master.m3u8
+        #EXTINF:-1 tvg-id="sony-pix-hd" tvg-name="Sony PIX HD" tvg-logo="https://i.postimg.cc/hGYnSKpg/SONY-PIX-HD.png",Sony PIX HD https://tataplay.slivcdn.com/hls/live/2011748/PIXHD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-bbc-earth-hd" tvg-name="Sony BBC Earth HD" tvg-logo="https://i.postimg.cc/t4g4cy4Z/SONY-BBC-EARTH.png",Sony BBC Earth HD https://tataplay.slivcdn.com/hls/live/2011907/SonyBBCEarthHD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-ten-1-hd" tvg-name="Sony Sports Ten 1 HD" tvg-logo="https://i.postimg.cc/d00sTpK0/SONY-SPORTS-TEN-1-HD.png",Sony Sports Ten 1 HD https://tataplay.slivcdn.com/hls/live/2011747/TEN1HD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-ten-2-hd" tvg-name="Sony Sports Ten 2 HD" tvg-logo="https://i.postimg.cc/wvfsmLrC/SONY-SPORTS-TEN-2-HD.png",Sony Sports Ten 2 HD https://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-ten-3-hd" tvg-name="Sony Sports Ten 3 HD" tvg-logo="https://i.postimg.cc/2SGvDswj/SONY-SPORTS-TEN-3-HD.png",Sony Sports Ten 3 HD https://tataplay.slivcdn.com/hls/live/2020591/TEN3HD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-ten-4-hd" tvg-name="Sony Sports Ten 4 HD" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqTzjp5hQzAllLUx0A_fJ5ThFLGdt-X7rIPKzw25coi6AUVjo_KyvDQrsb&s=10",Sony Sports Ten 4 HD https://tataplay.slivcdn.com/hls/live/2020589/ten4hd/master.m3u8
+        #EXTINF:-1 tvg-id="sony-ten-5-hd" tvg-name="Sony Sports Ten 5 HD" tvg-logo="https://i.postimg.cc/xCzcchKz/SONY-SPORTS-TEN-5-HD.png",Sony Sports Ten 5 HD https://tataplay.slivcdn.com/hls/live/2020593/SONYSIXHD/master.m3u8
+        #EXTINF:-1 tvg-id="sony-kal" tvg-name="Sony KAL" tvg-logo="https://i.postimg.cc/ZqnmcXdx/Sony-KAL.png",Sony KAL https://spt-sonykal-1-us.lg.wurl.tv/playlist.m3u8
+      `;
+      const grid = document.getElementById('channel-grid');
+      m3u.split('\n').forEach(line => {
+        const logo = line.match(/tvg-logo="([^"]+)"/)?.[1];
+        const name = line.match(/tvg-name="([^"]+)"/)?.[1];
+        const url = line.match(/https?:\/\/[^\s]+/)?.[0];
+        if (logo && name && url) {
+          const card = document.createElement('div');
+          card.className = 'channel-card';
+          card.title = name;
+          card.addEventListener('click', () => {
+            localStorage.setItem('allChannels', JSON.stringify({ name, logo, url }));
+            window.location.href = 'player.html';
+          });
+          const img = document.createElement('img');
+          img.src = logo;
+          img.alt = name;
+          card.appendChild(img);
+          grid.appendChild(card);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
