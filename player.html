@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Player</title>
+
+    <!-- Video.js CDN -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        /* Video Player Styles */
+        #video-container {
+            width: 100%;
+            padding: 0;
+            margin: 0 auto;
+        }
+        .video-js {
+            width: 100% !important;
+            height: 200px !important;
+            max-height: 50vh;
+            background-color: #000;
+        }
+
+        /* Other Channels Section Styles */
+        .other-channels-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem 1rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.6rem;
+            color: #ffffffcc;
+            margin: 1.5rem 0;
+            font-weight: 600;
+        }
+
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        .channel-card {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        .channel-card:hover {
+            transform: scale(1.08);
+        }
+
+        .channel-card.active {
+            box-shadow: 0 0 0 3px #00bfff, 0 6px 20px rgba(0, 191, 255, 0.6);
+            transform: scale(1.08);
+        }
+
+        .channel-card img {
+            max-width: 75%;
+            max-height: 75%;
+            object-fit: contain;
+        }
+
+        @media (max-width: 480px) {
+            .channel-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+            }
+
+            .channel-card {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="video-container">
+        <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls autoplay muted playsinline></video>
+    </div>
+
+    <div class="other-channels-section">
+        <h2 class="section-title">অন্যান্য চ্যানেল</h2>
+        <div id="other-channels-grid" class="channel-grid">
+            <!-- অন্যান্য চ্যানেল লোগো এখানে যোগ করা হবে -->
+        </div>
+    </div>
+
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const allChannels = JSON.parse(localStorage.getItem('allChannelsData'));
+            let selectedUrl = localStorage.getItem('selectedChannelUrl');
+
+            if (!allChannels || !selectedUrl) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const otherChannelsGrid = document.getElementById('other-channels-grid');
+            const player = videojs('live-player', {
+                fluid: false,
+            });
+
+            function loadChannel(channelUrl) {
+                const channel = allChannels.find(ch => ch.url === channelUrl);
+                if (!channel) return;
+
+                player.src({
+                    src: channel.url,
+                    type: 'application/x-mpegURL'
+                });
+                player.play();
+                document.title = `Playing: ${channel.name}`;
+                updateOtherChannels(channelUrl);
+            }
+
+            function updateOtherChannels(currentUrl) {
+                otherChannelsGrid.innerHTML = '';
+
+                allChannels.forEach(channel => {
+                    const card = document.createElement('div');
+                    card.className = 'channel-card';
+                    if (channel.url === currentUrl) {
+                        card.classList.add('active');
+                    }
+                    card.innerHTML = `<img src="${channel.logo}" alt="${channel.name} Logo">`;
+
+                    card.addEventListener('click', () => {
+                        if (channel.url !== selectedUrl) {
+                            selectedUrl = channel.url;
+                            localStorage.setItem('selectedChannelUrl', selectedUrl);
+                            loadChannel(selectedUrl);
+                        }
+                    });
+                    otherChannelsGrid.appendChild(card);
+                });
+            }
+
+            loadChannel(selectedUrl);
+        });
+    </script>
+</body>
+</html>
